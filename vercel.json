@@ -1,11 +1,5 @@
 {
   "version": 2,
-  "env": {
-    "BOT_TOKEN": "@bot_token",
-    "MONGO_DB_PASSWORD": "@mongo_db_password",
-    "MONGO_DB_USERNAME": "@mongo_db_username",
-    "BOT_WEB_APP_FRONT_URL": "@bot_web_app_front_url"
-  },
   "builds": [
     {
       "src": "src/main.ts",
