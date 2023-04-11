@@ -10,13 +10,13 @@ import { ItemsModule } from './items/items.module';
 import { ImageModule } from './image/image.module';
 import { OrdersModule } from './order/orders.module';
 
-const session = new LocalSession({ database: 'session_db.json' });
+//const session = new LocalSession({ database: 'session_db.json' });
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TelegrafModule.forRoot({
-      middlewares: [session.middleware()],
+      // middlewares: [session.middleware()],
       token: process.env.BOT_TOKEN,
     }),
     MongooseModule.forRoot(
