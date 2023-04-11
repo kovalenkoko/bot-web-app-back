@@ -1,30 +1,32 @@
-import {Prop, Schema, SchemaFactory, raw} from "@nestjs/mongoose";
-import {HydratedDocument, Document} from "mongoose";
-import { Schema as SchemaTypes } from "mongoose"
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+import { Schema as SchemaTypes } from 'mongoose';
 
-export type ImageDocument = HydratedDocument<Image>
+export type ImageDocument = HydratedDocument<Image>;
 
 @Schema()
-class ImageData{
-    @Prop()
-    data: Buffer;
+class ImageData {
+  @Prop()
+  data: Buffer;
 
-    @Prop()
-    contentType: string;
+  @Prop()
+  contentType: string;
 }
 
 @Schema()
-export class Image{
-    readonly _id: SchemaTypes.Types.ObjectId;
+export class Image {
+  readonly _id: SchemaTypes.Types.ObjectId;
 
-    @Prop(raw({
-        data: { type: Buffer },
-        contentType: { type: String }
-    }))
-    image_file: ImageData
+  @Prop(
+    raw({
+      data: { type: Buffer },
+      contentType: { type: String },
+    }),
+  )
+  image_file: ImageData;
 
-    @Prop()
-    url: string
+  @Prop()
+  url: string;
 }
 
-export const ImageSchema = SchemaFactory.createForClass(Image)
+export const ImageSchema = SchemaFactory.createForClass(Image);

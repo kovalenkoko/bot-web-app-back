@@ -1,52 +1,63 @@
-import { Controller, Post, UseInterceptors, UploadedFile, Res, Req, Body, HttpStatus, Get, Param, NotFoundException, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+  Req,
+  Body,
+  HttpStatus,
+  Get,
+  Param,
+  NotFoundException,
+  Delete,
+} from '@nestjs/common';
 import { ImageService } from './image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('image')
 export class ImageController {
+  constructor(private imageService: ImageService) {}
 
-    constructor(private imageService: ImageService) { }
+  @Post('')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(@UploadedFile() file, @Res() res, @Req() req) {
+    const image = await this.imageService.create(file);
+    const newImage = image.toObject();
 
-    @Post('')
-    @UseInterceptors(FileInterceptor('file'))
-    async uploadImage(@UploadedFile() file, @Res() res, @Req() req) {
-        const image = await this.imageService.create(file);
-        const newImage = image.toObject();
+    const host = req.get('host');
+    newImage.image_file = undefined;
+    newImage.url = `http://${host}/image/${newImage._id}`;
 
-        const host = req.get('host');
-        newImage.image_file = undefined;
-        newImage.url = `http://${host}/image/${newImage._id}`;
+    return res.send(newImage);
+  }
 
-        return res.send(newImage);
-    }
+  @Get('')
+  async getImages(@Req() req) {
+    const host = req.get('host');
+    const images = await this.imageService.findAll();
 
-    @Get('')
-    async getImages(@Req() req) {
-        const host = req.get('host');
-        const images = await this.imageService.findAll();
+    images.forEach((image) => {
+      image.url = `http://${host}/image/${image._id}`;
+    });
 
-        images.forEach(image => {
-            image.url = `http://${host}/image/${image._id}`;
-        });
+    return images;
+  }
 
-        return images;
-    }
+  @Get(':id')
+  async getImage(@Res() res, @Body() body, @Param('id') id) {
+    const image = await this.imageService.getById(id);
+    if (!image) throw new NotFoundException('Image does not exist!');
+    res.setHeader('Content-Type', image.image_file.contentType);
+    return res.send(image.image_file.data);
+    // return res.send(image);
+  }
 
-    @Get(':id')
-    async getImage(@Res() res, @Body() body, @Param('id') id) {
-        const image = await this.imageService.getById(id);
-        if (!image) throw new NotFoundException('Image does not exist!');
-        res.setHeader('Content-Type', image.image_file.contentType);
-        return res.send(image.image_file.data);
-       // return res.send(image);
-    }
+  @Delete(':id')
+  async deleteImage(@Res() res, @Body() body, @Param('id') id) {
+    const image = await this.imageService.removeImage(id);
 
-
-    @Delete(':id')
-    async deleteImage(@Res() res, @Body() body, @Param('id') id) {
-        const image = await this.imageService.removeImage(id);
-
-        if (!image) throw new NotFoundException('Image does not exist!');
-        return res.status(HttpStatus.OK).json({msg: 'Image removed.'});
-    }
+    if (!image) throw new NotFoundException('Image does not exist!');
+    return res.status(HttpStatus.OK).json({ msg: 'Image removed.' });
+  }
 }

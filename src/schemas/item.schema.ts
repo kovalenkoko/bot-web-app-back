@@ -1,21 +1,27 @@
-import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
-import {HydratedDocument} from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export type ItemDocument = HydratedDocument<Item>
+export type ItemDocument = HydratedDocument<Item>;
 
 @Schema()
 export class Item {
-    @Prop({ required: true })
-    name: string
+  @Prop({ required: true })
+  name: string;
 
-    @Prop({ required: true })
-    price: number
+  @Prop({ required: true })
+  price: number;
 
-    @Prop()
-    description: string
+  @Prop()
+  quantity: number;
 
-    @Prop()
-    urls: [string]
+  @Prop()
+  itemSizes: [string];
+
+  @Prop()
+  description: string;
+
+  @Prop()
+  urls: [string];
 }
 
-export const ItemSchema = SchemaFactory.createForClass(Item)
+export const ItemSchema = SchemaFactory.createForClass(Item);
