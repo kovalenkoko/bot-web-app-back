@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TelegrafModule } from 'nestjs-telegraf';
-import * as LocalSession from 'telegraf-session-local';
+//import * as LocalSession from 'telegraf-session-local';
 import { BotUpdate } from './bot/bot.update';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
