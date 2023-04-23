@@ -6,16 +6,21 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 // import { AddItemDto } from './dto/add-item.dto';
 // import { UpdateItemDto } from './dto/update-item.dto';
 import { Order, OrderDocument } from '../schemas/order.schema';
+import { Item, ItemDocument } from '../schemas/item.schema';
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+    @InjectModel(Item.name) private itemModel: Model<ItemDocument>,
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    const createdOrder = new this.orderModel(createOrderDto);
-    return createdOrder.save();
+    const item = await this.itemModel.findById(createOrderDto.itemId).exec();
+    const { itemId, ...order } = createOrderDto;
+    const createdOrder = await new this.orderModel(order).save();
+    const orderWithItem = await this.addItem(createdOrder.id, item);
+    return orderWithItem;
   }
 
   async findAll(): Promise<Order[]> {
@@ -36,11 +41,11 @@ export class OrdersService {
     return this.orderModel.findByIdAndRemove(id).exec();
   }
 
-  // async addItem(id: string, addItemDto: AddItemDto): Promise<Order> {
-  //   const order = await this.orderModel.findById(id).exec();
-  //   order.items.push(addItemDto);
-  //   return order.save();
-  // }
+  async addItem(id: string, item: Item): Promise<Order> {
+    const order = await this.orderModel.findById(id).exec();
+    order.items.push(item);
+    return order.save();
+  }
   //
   // async updateItem(orderId: string, itemId: string, updateItemDto: UpdateItemDto): Promise<Order> {
   //   const order = await this.orderModel.findById(orderId).exec();
