@@ -1,5 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
-import { Default } from '../../decorators/default';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateOrderDto {
   @IsNotEmpty()
@@ -19,8 +18,4 @@ export class CreateOrderDto {
 
   @IsNotEmpty()
   shippingAddress: string;
-
-  isPaid = false;
-
-  isDelivered = false;
 }

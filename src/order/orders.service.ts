@@ -18,7 +18,12 @@ export class OrdersService {
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     const item = await this.itemModel.findById(createOrderDto.itemId).exec();
     const { itemId, ...order } = createOrderDto;
-    const createdOrder = await new this.orderModel(order).save();
+
+    const createdOrder = await new this.orderModel({
+      isPaid: false,
+      isDelivered: false,
+      ...order,
+    }).save();
     const orderWithItem = await this.addItem(createdOrder.id, item);
     return orderWithItem;
   }
