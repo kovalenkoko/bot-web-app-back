@@ -7,7 +7,11 @@ export class CreateItemDto {
   @IsNotEmpty()
   price: number;
 
-  urls: string[];
+  @IsNotEmpty()
+  description: string;
 
-  description?: string;
+  @IsNotEmpty()
+  itemSizes: string[];
+
+  urls: string[];
 }

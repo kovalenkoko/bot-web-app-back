@@ -1,6 +1,9 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateOrderDto {
+  @IsNotEmpty()
+  itemId: string;
+
   @IsOptional()
   itemSize: string;
 

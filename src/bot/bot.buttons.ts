@@ -4,7 +4,7 @@ export function actionButtons() {
   return Markup.inlineKeyboard([
     [
       {
-        text: 'Сайт',
+        text: 'Магазин',
         web_app: {
           url: `${process.env.BOT_WEB_APP_FRONT_URL}`,
         },
